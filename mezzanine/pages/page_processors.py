@@ -20,7 +20,7 @@ def processor_for(content_model_or_slug, exact_page=False):
     processor for the given content model or slug.
 
     When a page exists that forms the prefix of custom urlpatterns
-    in a project (eg: the blog page and app), the page will be
+    in a project, the page will be
     added to the template context. Passing in ``True`` for the
     ``exact_page`` arg, will ensure that the page processor is not
     run in this situation, requiring that the loaded page object

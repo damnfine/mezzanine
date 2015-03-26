@@ -18,8 +18,7 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 # Controls the ordering and grouping of the admin menu.
 #
 # ADMIN_MENU_ORDER = (
-#     ("Content", ("pages.Page", "blog.BlogPost",
-#        "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
+#     ("Content", ("pages.Page", (_("Media Library"), "fb_browse"),)),
 #     ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
 #     ("Users", ("auth.User", "auth.Group",)),
 # )
@@ -28,8 +27,7 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 # used to render the admin dashboard.
 #
 # DASHBOARD_TAGS = (
-#     ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
-#     ("comment_tags.recent_comments",),
+#     (mezzanine_tags.app_list"),
 #     ("mezzanine_tags.recent_actions",),
 # )
 
@@ -74,10 +72,6 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 #         {"blank": True, "default": 1},
 #     ),
 # )
-
-# Setting to turn on featured images for blog posts. Defaults to False.
-#
-# BLOG_USE_FEATURED_IMAGE = True
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
@@ -247,14 +241,9 @@ INSTALLED_APPS = (
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",
-    "mezzanine.generic",
     "mezzanine.pages",
-    "mezzanine.blog",
     "mezzanine.forms",
-    "mezzanine.galleries",
-    "mezzanine.twitter",
     # "mezzanine.accounts",
-    # "mezzanine.mobile",
 )
 
 # List of processors used by RequestContext to populate the context.

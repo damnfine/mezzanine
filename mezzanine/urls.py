@@ -56,7 +56,6 @@ if getattr(settings, "DEBUG", False):
 # Miscellanous Mezzanine patterns.
 urlpatterns += patterns("",
     ("^", include("mezzanine.core.urls")),
-    ("^", include("mezzanine.generic.urls")),
 )
 
 # Mezzanine's Accounts app
@@ -72,15 +71,6 @@ if _old_accounts_enabled or "mezzanine.accounts" in settings.INSTALLED_APPS:
     urlpatterns += patterns("",
         ("^", include("mezzanine.accounts.urls")),
     )
-
-# Mezzanine's Blog app.
-blog_installed = "mezzanine.blog" in settings.INSTALLED_APPS
-if blog_installed:
-    BLOG_SLUG = settings.BLOG_SLUG.rstrip("/")
-    blog_patterns = patterns("",
-        ("^%s" % BLOG_SLUG, include("mezzanine.blog.urls")),
-    )
-    urlpatterns += blog_patterns
 
 # Mezzanine's Pages app.
 PAGES_SLUG = ""

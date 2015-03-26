@@ -280,10 +280,6 @@ td, th, th a, label, .help, p.help {
 .items .placeholder {
     display: block;
 }
-.keywords-field a {
-    margin-right: 10px;
-    float: left;
-}
 #settings-form .module {
     width: 60%;
 }

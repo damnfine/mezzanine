@@ -8,11 +8,6 @@ from mezzanine.core.models import Displayable
 from mezzanine.utils.sites import current_site_id
 
 
-blog_installed = "mezzanine.blog" in settings.INSTALLED_APPS
-if blog_installed:
-    from mezzanine.blog.models import BlogPost
-
-
 class DisplayableSitemap(Sitemap):
     """
     Sitemap class for Django's sitemaps framework that returns
@@ -27,8 +22,7 @@ class DisplayableSitemap(Sitemap):
         return list(Displayable.objects.url_map(in_sitemap=True).values())
 
     def lastmod(self, obj):
-        if blog_installed and isinstance(obj, BlogPost):
-            return obj.updated or obj.publish_date
+        pass
 
     def get_urls(self, **kwargs):
         """

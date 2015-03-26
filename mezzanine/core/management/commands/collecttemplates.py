@@ -26,8 +26,7 @@ class Command(BaseCommand):
             default=True, help="Do NOT prompt for input of any kind. "
                                "Existing templates will be overwritten."),
         make_option('-t', '--template', dest='template',
-            help="The template name and relative path of a single template "
-                 "to copy, eg: blog/blog_post_list.html"),
+            help="The template name and relative path of a single template to copy"),
         make_option('-a', '--admin', action='store_true', dest='admin',
             default=False, help="Include admin templates."),
     )
@@ -50,9 +49,9 @@ class Command(BaseCommand):
                 raise CommandError("Apps are not in INSTALLED_APPS: " +
                                     ", ".join(not_installed))
         else:
-            # No apps specified - default to all in Mezzanine/Cartridge.
+            # No apps specified - default to all in Mezzanine.
             apps = [a for a in settings.INSTALLED_APPS
-                    if a.split(".")[0] in ("mezzanine", "cartridge")]
+                    if a.split(".")[0] in ("mezzanine")]
 
         # Build a list of name/path pairs of all templates to copy.
         for app in apps:

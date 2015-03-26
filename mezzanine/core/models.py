@@ -23,7 +23,6 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.fields import RichTextField, OrderField
 from mezzanine.core.managers import DisplayableManager, CurrentSiteManager
-from mezzanine.generic.fields import KeywordsField
 from mezzanine.utils.html import TagCloser
 from mezzanine.utils.models import base_concrete_model, get_user_model_name
 from mezzanine.utils.sites import current_site_id, current_request
@@ -129,8 +128,6 @@ class MetaData(models.Model):
         help_text=_("If checked, the description will be automatically "
                     "generated from content. Uncheck if you want to manually "
                     "set a custom description."), default=True)
-    keywords = KeywordsField(verbose_name=_("Keywords"))
-
     class Meta:
         abstract = True
 
@@ -215,8 +212,7 @@ SHORT_URL_UNSET = "unset"
 class Displayable(Slugged, MetaData, TimeStamped):
     """
     Abstract model that provides features of a visible page on the
-    website such as publishing fields. Basis of Mezzanine pages,
-    blog posts, and Cartridge products.
+    website such as publishing fields. Basis of Mezzanine pages.
     """
 
     status = models.IntegerField(_("Status"),
@@ -233,16 +229,14 @@ class Displayable(Slugged, MetaData, TimeStamped):
     in_sitemap = models.BooleanField(_("Show in sitemap"), default=True)
 
     objects = DisplayableManager()
-    search_fields = {"keywords": 10, "title": 5}
+    search_fields = {"title": 5}
 
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
         """
-        Set default for ``publish_date``. We can't use ``auto_now_add`` on
-        the field as it will be blank when a blog post is created from
-        the quick blog form in the admin dashboard.
+        Set default for ``publish_date``.
         """
         if self.publish_date is None:
             self.publish_date = now()
@@ -275,7 +269,7 @@ class Displayable(Slugged, MetaData, TimeStamped):
 
         Technically we should use ``self.site.domain``, here, however
         if we were to invoke the ``short_url`` mechanics on a list of
-        data (eg blog post list view), we'd trigger a db query per
+        data, we'd trigger a db query per
         item. Using ``current_request`` should provide the same
         result, since site related data should only be loaded based
         on the current host anyway.

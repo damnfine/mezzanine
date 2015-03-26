@@ -47,9 +47,7 @@ class Command(NoArgsCommand):
             [self.create_site, ["django.contrib.sites"]],
             [self.create_user, ["django.contrib.auth"]],
             [self.translation_fields, ["modeltranslation"]],
-            [self.create_pages, ["mezzanine.pages", "mezzanine.forms",
-                                 "mezzanine.blog", "mezzanine.galleries"]],
-            [self.create_shop, ["cartridge.shop"]],
+            [self.create_pages, ["mezzanine.pages", "mezzanine.forms"]],
             [self.fake_migrations, ["south"]],
         ]
 
@@ -98,32 +96,6 @@ class Command(NoArgsCommand):
 
     def create_pages(self):
         call_command("loaddata", "mezzanine_required.json")
-        install_optional = not self.no_data and self.confirm(
-            "\nWould you like to install some initial "
-            "demo pages?\nEg: About us, Contact form, "
-            "Gallery. (yes/no): ")
-        if install_optional:
-            if self.verbosity >= 1:
-                print("\nCreating demo pages: About us, Contact form, "
-                        "Gallery ...\n")
-            from mezzanine.galleries.models import Gallery
-            call_command("loaddata", "mezzanine_optional.json")
-            zip_name = "gallery.zip"
-            copy_test_to_media("mezzanine.core", zip_name)
-            gallery = Gallery.objects.get()
-            gallery.zip_import = zip_name
-            gallery.save()
-
-    def create_shop(self):
-        call_command("loaddata", "cartridge_required.json")
-        install_optional = not self.no_data and self.confirm(
-            "\nWould you like to install an initial "
-            "demo product and sale? (yes/no): ")
-        if install_optional:
-            if self.verbosity >= 1:
-                print("\nCreating demo product and sale ...\n")
-            call_command("loaddata", "cartridge_optional.json")
-            copy_test_to_media("cartridge.shop", "product")
 
     def fake_migrations(self):
         try:
