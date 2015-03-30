@@ -1,5 +1,5 @@
-.. image:: https://secure.travis-ci.org/stephenmcd/mezzanine.png?branch=master
-   :target: http://travis-ci.org/#!/stephenmcd/mezzanine
+.. image:: https://circleci.com/gh/damnfine/mezzanine.svg?style=shield&circle-token=48c192a157b3a582049904ae00003acdf288b73e 
+tr:target: https://circleci.com/gh/damnfine/mezzanine
 
 Created by `Stephen McDonald <http://twitter.com/stephen_mcd>`_
 
