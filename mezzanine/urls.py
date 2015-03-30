@@ -5,7 +5,6 @@ filebrowser.
 """
 
 from __future__ import unicode_literals
-from future.builtins import str
 
 from django.conf.urls import patterns, include
 from django.contrib import admin
@@ -56,7 +55,6 @@ if getattr(settings, "DEBUG", False):
 # Miscellanous Mezzanine patterns.
 urlpatterns += patterns("",
     ("^", include("mezzanine.core.urls")),
-    ("^", include("mezzanine.generic.urls")),
 )
 
 # Mezzanine's Accounts app
@@ -73,28 +71,9 @@ if _old_accounts_enabled or "mezzanine.accounts" in settings.INSTALLED_APPS:
         ("^", include("mezzanine.accounts.urls")),
     )
 
-# Mezzanine's Blog app.
-blog_installed = "mezzanine.blog" in settings.INSTALLED_APPS
-if blog_installed:
-    BLOG_SLUG = settings.BLOG_SLUG.rstrip("/")
-    blog_patterns = patterns("",
-        ("^%s" % BLOG_SLUG, include("mezzanine.blog.urls")),
-    )
-    urlpatterns += blog_patterns
-
 # Mezzanine's Pages app.
 PAGES_SLUG = ""
 if "mezzanine.pages" in settings.INSTALLED_APPS:
-    # No BLOG_SLUG means catch-all patterns belong to the blog,
-    # so give pages their own prefix and inject them before the
-    # blog urlpatterns.
-    if blog_installed and not BLOG_SLUG:
-        PAGES_SLUG = getattr(settings, "PAGES_SLUG", "pages").strip("/") + "/"
-        blog_patterns_start = urlpatterns.index(blog_patterns[0])
-        urlpatterns[blog_patterns_start:len(blog_patterns)] = patterns("",
-            ("^%s" % str(PAGES_SLUG), include("mezzanine.pages.urls")),
-        )
-    else:
-        urlpatterns += patterns("",
-            ("^", include("mezzanine.pages.urls")),
-        )
+    urlpatterns += patterns("",
+        ("^", include("mezzanine.pages.urls")),
+    )

@@ -153,7 +153,7 @@ def set_dynamic_settings(s):
             # filesystem path - this can't be the actual app either,
             # side effects again, but we can generally import the
             # top-level package for apps that are contained within
-            # one, which covers Mezzanine, Cartridge, Drum.
+            # one, which covers Mezzanine, Drum.
             if "." not in app:
                 continue
             migrations = "%s.migrations.south" % app
@@ -213,13 +213,6 @@ def set_dynamic_settings(s):
             move("INSTALLED_APPS", app, len(s["INSTALLED_APPS"]))
         except ValueError:
             pass
-
-    # Add missing apps if existing apps depend on them.
-    if "mezzanine.blog" in s["INSTALLED_APPS"]:
-        append("INSTALLED_APPS", "mezzanine.generic")
-    if "mezzanine.generic" in s["INSTALLED_APPS"]:
-        s.setdefault("COMMENTS_APP", "mezzanine.generic")
-        append("INSTALLED_APPS", "django_comments")
 
     # Ensure mezzanine.boot is first.
     try:

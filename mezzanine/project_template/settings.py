@@ -18,8 +18,7 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 # Controls the ordering and grouping of the admin menu.
 #
 # ADMIN_MENU_ORDER = (
-#     ("Content", ("pages.Page", "blog.BlogPost",
-#        "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
+#     ("Content", ("pages.Page", (_("Media Library"), "fb_browse"),)),
 #     ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
 #     ("Users", ("auth.User", "auth.Group",)),
 # )
@@ -28,8 +27,7 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 # used to render the admin dashboard.
 #
 # DASHBOARD_TAGS = (
-#     ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
-#     ("comment_tags.recent_comments",),
+#     (mezzanine_tags.app_list"),
 #     ("mezzanine_tags.recent_actions",),
 # )
 
@@ -75,10 +73,6 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 #     ),
 # )
 
-# Setting to turn on featured images for blog posts. Defaults to False.
-#
-# BLOG_USE_FEATURED_IMAGE = True
-
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
 USE_SOUTH = True
@@ -111,7 +105,7 @@ ALLOWED_HOSTS = []
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = None
+TIME_ZONE = 'Europe/London'
 
 # If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
@@ -135,6 +129,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SITE_ID = 1
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
@@ -247,14 +242,8 @@ INSTALLED_APPS = (
     "mezzanine.boot",
     "mezzanine.conf",
     "mezzanine.core",
-    "mezzanine.generic",
     "mezzanine.pages",
-    "mezzanine.blog",
     "mezzanine.forms",
-    "mezzanine.galleries",
-    "mezzanine.twitter",
-    # "mezzanine.accounts",
-    # "mezzanine.mobile",
 )
 
 # List of processors used by RequestContext to populate the context.
