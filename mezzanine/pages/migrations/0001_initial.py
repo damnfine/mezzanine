@@ -43,18 +43,6 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='Link',
-            fields=[
-                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),
-            ],
-            options={
-                'ordering': ('_order',),
-                'verbose_name': 'Link',
-                'verbose_name_plural': 'Links',
-            },
-            bases=('pages.page',),
-        ),
-        migrations.CreateModel(
             name='RichTextPage',
             fields=[
                 ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),

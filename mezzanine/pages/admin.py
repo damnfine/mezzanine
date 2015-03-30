@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 
 from mezzanine.conf import settings
 from mezzanine.core.admin import DisplayableAdmin, DisplayableAdminForm
-from mezzanine.pages.models import Page, RichTextPage, Link
+from mezzanine.pages.models import Page, RichTextPage
 from mezzanine.utils.urls import admin_url
 
 
@@ -214,34 +214,6 @@ class PageAdmin(DisplayableAdmin):
                 return (unordered, page.meta_verbose_name)
         return sorted(models, key=sort_key)
 
-# Drop the meta data fields, and move slug towards the stop.
-link_fieldsets = deepcopy(page_fieldsets[:1])
-link_fieldsets[0][1]["fields"] = link_fieldsets[0][1]["fields"][:-1]
-link_fieldsets[0][1]["fields"].insert(1, "slug")
-
-
-class LinkAdmin(PageAdmin):
-
-    fieldsets = link_fieldsets
-
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        """
-        Make slug mandatory.
-        """
-        if db_field.name == "slug":
-            kwargs["required"] = True
-        return super(LinkAdmin, self).formfield_for_dbfield(db_field, **kwargs)
-
-    def save_form(self, request, form, change):
-        """
-        Don't show links in the sitemap.
-        """
-        obj = form.save(commit=False)
-        if not obj.id and "in_sitemap" not in form.fields:
-            obj.in_sitemap = False
-        return super(LinkAdmin, self).save_form(request, form, change)
-
 
 admin.site.register(Page, PageAdmin)
 admin.site.register(RichTextPage, PageAdmin)
-admin.site.register(Link, LinkAdmin)
