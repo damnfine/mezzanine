@@ -67,7 +67,6 @@ class DisplayableAdmin(BaseTranslationModelAdmin):
     list_display = ("title", "status", "admin_link")
     list_display_links = ("title",)
     list_editable = ("status",)
-    list_filter = ("status", "keywords__keyword")
     date_hierarchy = "publish_date"
     radio_fields = {"status": admin.HORIZONTAL}
     fieldsets = (
@@ -77,7 +76,7 @@ class DisplayableAdmin(BaseTranslationModelAdmin):
         (_("Meta data"), {
             "fields": ["_meta_title", "slug",
                        ("description", "gen_description"),
-                        "keywords", "in_sitemap"],
+                       "in_sitemap"],
             "classes": ("collapse-closed",)
         }),
     )

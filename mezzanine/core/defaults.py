@@ -22,8 +22,7 @@ register_setting(
     description=_("Controls the ordering and grouping of the admin menu."),
     editable=False,
     default=(
-        (_("Content"), ("pages.Page", "blog.BlogPost",
-           "generic.ThreadedComment", (_("Media Library"), "fb_browse"),)),
+        (_("Content"), ("pages.Page", (_("Media Library"), "fb_browse"),)),
         (_("Site"), ("sites.Site", "redirects.Redirect", "conf.Setting")),
         (_("Users"), ("auth.User", "auth.Group",)),
     ),
@@ -84,18 +83,11 @@ register_setting(
     default=30,
 )
 
-if "mezzanine.blog" in settings.INSTALLED_APPS:
-    dashboard_tags = (
-        ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
-        ("comment_tags.recent_comments",),
-        ("mezzanine_tags.recent_actions",),
-    )
-else:
-    dashboard_tags = (
-        ("mezzanine_tags.app_list",),
-        ("mezzanine_tags.recent_actions",),
-        (),
-    )
+dashboard_tags = (
+    ("mezzanine_tags.app_list",),
+    ("mezzanine_tags.recent_actions",),
+    (),
+)
 
 register_setting(
     name="DASHBOARD_TAGS",
@@ -341,7 +333,7 @@ register_setting(
         "``app_label.model_name``. Only models that subclass "
         "``mezzanine.core.models.Displayable`` should be used."),
     editable=False,
-    default=("pages.Page", "blog.BlogPost"),
+    default=(["pages.Page"]),
 )
 
 register_setting(
@@ -517,7 +509,7 @@ register_setting(
     default=(
         "ACCOUNTS_APPROVAL_REQUIRED", "ACCOUNTS_VERIFICATION_REQUIRED",
         "ADMIN_MENU_COLLAPSED",
-        "BITLY_ACCESS_TOKEN", "BLOG_USE_FEATURED_IMAGE",
+        "BITLY_ACCESS_TOKEN",
         "COMMENTS_DISQUS_SHORTNAME", "COMMENTS_NUM_LATEST",
         "COMMENTS_DISQUS_API_PUBLIC_KEY", "COMMENTS_DISQUS_API_SECRET_KEY",
         "COMMENTS_USE_RATINGS", "DEV_SERVER", "FORMS_USE_HTML5",

@@ -39,8 +39,7 @@ class PageManager(DisplayableManager):
         Primarily used in ``PageMiddleware`` to provide the current
         page, which in the case of non-page views, won't match the
         slug exactly, but will likely match a page that has been
-        created for linking to the entry point for the app, eg the
-        blog page when viewing blog posts.
+        created for linking to the entry point for the app.
 
         Also used within ``Page.get_ascendants``, which gets called
         in the ``pages.views`` view, for building a list of possible

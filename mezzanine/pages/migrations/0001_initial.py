@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import mezzanine.core.fields
 import mezzanine.pages.fields
+import mezzanine.core.fields
 
 
 class Migration(migrations.Migration):
@@ -17,7 +17,6 @@ class Migration(migrations.Migration):
             name='Page',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('keywords_string', models.CharField(max_length=500, editable=False, blank=True)),
                 ('title', models.CharField(max_length=500, verbose_name='Title')),
                 ('slug', models.CharField(help_text='Leave blank to have the URL auto-generated from the title.', max_length=2000, null=True, verbose_name='URL', blank=True)),
                 ('_meta_title', models.CharField(help_text='Optional title to be used in the HTML title tag. If left blank, the main title field will be used.', max_length=500, null=True, verbose_name='Title', blank=True)),
@@ -30,8 +29,8 @@ class Migration(migrations.Migration):
                 ('expiry_date', models.DateTimeField(help_text="With Published chosen, won't be shown after this time", null=True, verbose_name='Expires on', blank=True)),
                 ('short_url', models.URLField(null=True, blank=True)),
                 ('in_sitemap', models.BooleanField(default=True, verbose_name='Show in sitemap')),
-                ('_order', models.IntegerField(null=True, verbose_name='Order')),
-                ('in_menus', mezzanine.pages.fields.MenusField(default=(1, 2, 3), choices=[(1, 'Top navigation bar'), (2, 'Left-hand tree'), (3, 'Footer')], max_length=100, blank=True, null=True, verbose_name='Show in menus')),
+                ('_order', mezzanine.core.fields.OrderField(null=True, verbose_name='Order')),
+                ('in_menus', mezzanine.pages.fields.MenusField(max_length=100, null=True, verbose_name='Show in menus', blank=True)),
                 ('titles', models.CharField(max_length=1000, null=True, editable=False)),
                 ('content_model', models.CharField(max_length=50, null=True, editable=False)),
                 ('login_required', models.BooleanField(default=False, help_text='If checked, only logged in users can view this page', verbose_name='Login required')),
@@ -42,18 +41,6 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Pages',
             },
             bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='Link',
-            fields=[
-                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),
-            ],
-            options={
-                'ordering': ('_order',),
-                'verbose_name': 'Link',
-                'verbose_name_plural': 'Links',
-            },
-            bases=('pages.page',),
         ),
         migrations.CreateModel(
             name='RichTextPage',

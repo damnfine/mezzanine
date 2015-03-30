@@ -294,17 +294,6 @@ class RichTextPage(Page, RichText):
         verbose_name_plural = _("Rich text pages")
 
 
-class Link(Page):
-    """
-    A general content type for creating external links in the page
-    menu.
-    """
-
-    class Meta:
-        verbose_name = _("Link")
-        verbose_name_plural = _("Links")
-
-
 class PageMoveException(Exception):
     """
     Raised by ``can_move()`` when the move permission is denied. Takes
