@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 from django.contrib.sitemaps import Sitemap
 from django.contrib.sites.models import Site
 
-from mezzanine.conf import settings
 from mezzanine.core.models import Displayable
 from mezzanine.utils.sites import current_site_id
 

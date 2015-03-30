@@ -26,7 +26,8 @@ class Command(BaseCommand):
             default=True, help="Do NOT prompt for input of any kind. "
                                "Existing templates will be overwritten."),
         make_option('-t', '--template', dest='template',
-            help="The template name and relative path of a single template to copy"),
+            help="The template name and relative path of a "
+                 "single template to copy"),
         make_option('-a', '--admin', action='store_true', dest='admin',
             default=False, help="Include admin templates."),
     )

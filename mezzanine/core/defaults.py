@@ -333,7 +333,7 @@ register_setting(
         "``app_label.model_name``. Only models that subclass "
         "``mezzanine.core.models.Displayable`` should be used."),
     editable=False,
-    default=("pages.Page"),
+    default=(["pages.Page"]),
 )
 
 register_setting(

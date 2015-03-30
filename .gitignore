@@ -16,3 +16,4 @@ mezzanine/project_template/static/
 /mezzanine/.project
 /mezzanine/.pydevproject
 venv
+.eggs

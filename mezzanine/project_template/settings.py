@@ -105,7 +105,7 @@ ALLOWED_HOSTS = []
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = None
+TIME_ZONE = 'Europe/London'
 
 # If you set this to True, Django will use timezone-aware datetimes.
 USE_TZ = True
@@ -129,6 +129,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SITE_ID = 1
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
@@ -243,7 +244,6 @@ INSTALLED_APPS = (
     "mezzanine.core",
     "mezzanine.pages",
     "mezzanine.forms",
-    # "mezzanine.accounts",
 )
 
 # List of processors used by RequestContext to populate the context.

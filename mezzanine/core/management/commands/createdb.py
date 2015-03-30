@@ -16,7 +16,6 @@ except ImportError:
     from django.core.management.commands import syncdb as migrate
 
 from mezzanine.conf import settings
-from mezzanine.utils.tests import copy_test_to_media
 
 
 DEFAULT_USERNAME = "admin"

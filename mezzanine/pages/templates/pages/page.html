@@ -2,13 +2,5 @@
 
 {% block meta_title %}{{ page.meta_title }}{% endblock %}
 
-{% block meta_description %}{% metablock %}
-{{ page.description }}
-{% endmetablock %}{% endblock %}
-
-{% block title %}
-{% editable page.title %}{{ page.title }}{% endeditable %}
-{% endblock %}
-
 {% block main %}
 {% endblock %}

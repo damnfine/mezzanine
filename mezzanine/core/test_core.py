@@ -34,7 +34,7 @@ from mezzanine.forms.models import Form
 from mezzanine.pages.models import RichTextPage
 from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.tests import (TestCase, run_pyflakes_for_package,
-                                             run_pep8_for_package)
+                                    run_pep8_for_package)
 from mezzanine.utils.html import TagCloser
 
 
