@@ -11,11 +11,11 @@ DATABASES = {
         # DB name or path to database file if using sqlite3.
         "NAME": "%(proj_name)s",
         # Not used with sqlite3.
-        "USER": "%(proj_name)s",
+        "USER": "postgres",
         # Not used with sqlite3.
-        "PASSWORD": "%(db_pass)s",
+        "PASSWORD": "",
         # Set to empty string for localhost. Not used with sqlite3.
-        "HOST": "127.0.0.1",
+        "HOST": "",
         # Set to empty string for default. Not used with sqlite3.
         "PORT": "",
     }
