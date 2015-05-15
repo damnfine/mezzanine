@@ -1,17 +1,24 @@
+# SETUP TODO
 from __future__ import unicode_literals
 
-SECRET_KEY = "%(secret_key)s"
-NEVERCACHE_KEY = "%(nevercache_key)s"
-ALLOWED_HOSTS = [%(domains_python)s]
+DEBUG = True
+
+SECRET_KEY = "97ab9fc8-4e77-4034-bf49-67a205a78b2da07becf2-8f4c-4ab3-b169-1b7d6f3aeae8b8162e23-eaca-4894-9399-30f3067a1f44"
+NEVERCACHE_KEY = "0e2d6fc0-4057-4a7c-be34-2992c4523a2f2d4fb161-ceb5-433d-bbf2-7f84698ea810128d828b-c45b-47bc-8ac2-9b479fa64657"
+
+STAGE = "local"
+PROJECT_NAME = "example"
+
+ALLOWED_HOSTS = ["%s.example.com" % STAGE]
 
 DATABASES = {
     "default": {
         # Ends with "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         # DB name or path to database file if using sqlite3.
-        "NAME": "%(proj_name)s",
+        "NAME": "%s_%s" % (PROJECT_NAME, STAGE, ),
         # Not used with sqlite3.
-        "USER": "postgres",
+        "USER": "git",
         # Not used with sqlite3.
         "PASSWORD": "",
         # Set to empty string for localhost. Not used with sqlite3.
@@ -20,18 +27,3 @@ DATABASES = {
         "PORT": "",
     }
 }
-
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
-
-CACHE_MIDDLEWARE_SECONDS = 60
-
-CACHE_MIDDLEWARE_KEY_PREFIX = "%(proj_name)s"
-
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
-        "LOCATION": "127.0.0.1:11211",
-    }
-}
-
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"

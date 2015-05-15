@@ -1,9 +1,10 @@
+# SETUP TODO
 # www to non-www redirect -- duplicate content is BAD:
 # https://github.com/h5bp/html5-boilerplate/blob/5370479476dceae7cc3ea105946536d6bc0ee468/.htaccess#L362
 # Choose between www and non-www, listen on the *wrong* one and redirect to
 # the right one -- http://wiki.nginx.org/Pitfalls#Server_Name
 
-upstream cms_app {
+upstream example_app {
     server  unix:/tmp/example_gunicorn.sock;
 }
 
@@ -28,7 +29,7 @@ server {
   error_page 404 /404.html;
 
   location / {
-    proxy_pass          http://cms_app;
+    proxy_pass          http://example_app;
     proxy_redirect      off;
     proxy_set_header    Host $host;
     proxy_set_header    X-Real-IP $remote_addr;
@@ -36,11 +37,11 @@ server {
     proxy_set_header    X-Forwarded-Host $server_name;
   }
 
-  #location /static/ {
-  #  root            /opt/example/current/static;
-  #  access_log      off;
-  #  log_not_found   off;
-  #}
+  location /static/ {
+    root            /opt/example/current/static;
+    access_log      off;
+    log_not_found   off;
+  }
 
   location /robots.txt {
     return 200 "User-agent: *\nDisallow: /";
