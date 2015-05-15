@@ -25,13 +25,11 @@ from django.utils.unittest import skipUnless
 
 from mezzanine.conf import settings
 from mezzanine.core.admin import BaseDynamicInlineAdmin
-from mezzanine.core.fields import RichTextField
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import (CONTENT_STATUS_DRAFT,
                                    CONTENT_STATUS_PUBLISHED)
 from mezzanine.forms.admin import FieldAdmin
 from mezzanine.forms.models import Form
-from mezzanine.pages.models import RichTextPage
 from mezzanine.utils.importing import import_dotted_path
 from mezzanine.utils.tests import (TestCase, run_pyflakes_for_package,
                                     run_pep8_for_package)
@@ -62,7 +60,6 @@ class CoreTests(TestCase):
         kwargs = {"slug": "device-test"}
         url = reverse("page", kwargs=kwargs)
         kwargs["status"] = CONTENT_STATUS_PUBLISHED
-        RichTextPage.objects.get_or_create(**kwargs)
         default = self.client.get(url)
         mobile = self.client.get(url, HTTP_USER_AGENT=ua)
         self.assertNotEqual(default.template_name[0], mobile.template_name[0])
@@ -90,33 +87,6 @@ class CoreTests(TestCase):
             self.fail("mezzanine.utils.imports.import_dotted_path"
                       "could not import \"mezzanine.core\"")
 
-    @skipUnless("mezzanine.pages" in settings.INSTALLED_APPS,
-                "pages app required")
-    def test_description(self):
-        """
-        Test generated description is text version of the first line
-        of content.
-        """
-        description = "<p>How now brown cow</p>"
-        page = RichTextPage.objects.create(title="Draft",
-                                           content=description * 3)
-        self.assertEqual(page.description, strip_tags(description))
-
-    @skipUnless("mezzanine.pages" in settings.INSTALLED_APPS,
-                "pages app required")
-    def test_draft(self):
-        """
-        Test a draft object as only being viewable by a staff member.
-        """
-        self.client.logout()
-        draft = RichTextPage.objects.create(title="Draft",
-                                            status=CONTENT_STATUS_DRAFT)
-        response = self.client.get(draft.get_absolute_url(), follow=True)
-        self.assertEqual(response.status_code, 404)
-        self.client.login(username=self._username, password=self._password)
-        response = self.client.get(draft.get_absolute_url(), follow=True)
-        self.assertEqual(response.status_code, 200)
-
     def test_searchable_manager_search_fields(self):
         """
         Test that SearchableManager can get appropriate params.
@@ -125,69 +95,6 @@ class CoreTests(TestCase):
         self.assertFalse(manager._search_fields)
         manager = DisplayableManager(search_fields={'foo': 10})
         self.assertTrue(manager._search_fields)
-
-    @skipUnless("mezzanine.pages" in settings.INSTALLED_APPS,
-                "pages app required")
-    def test_search(self):
-        """
-        Objects with status "Draft" should not be within search results.
-        """
-        RichTextPage.objects.all().delete()
-        published = {"status": CONTENT_STATUS_PUBLISHED}
-        first = RichTextPage.objects.create(title="test page",
-                                           status=CONTENT_STATUS_DRAFT).id
-        second = RichTextPage.objects.create(title="test another test page",
-                                            **published).id
-        # Draft shouldn't be a result.
-        results = RichTextPage.objects.search("test")
-        self.assertEqual(len(results), 1)
-        RichTextPage.objects.filter(id=first).update(**published)
-        results = RichTextPage.objects.search("test")
-        self.assertEqual(len(results), 2)
-        # Either word.
-        results = RichTextPage.objects.search("another test")
-        self.assertEqual(len(results), 2)
-        # Must include first word.
-        results = RichTextPage.objects.search("+another test")
-        self.assertEqual(len(results), 1)
-        # Mustn't include first word.
-        results = RichTextPage.objects.search("-another test")
-        self.assertEqual(len(results), 1)
-        if results:
-            self.assertEqual(results[0].id, first)
-        # Exact phrase.
-        results = RichTextPage.objects.search('"another test"')
-        self.assertEqual(len(results), 1)
-        if results:
-            self.assertEqual(results[0].id, second)
-        # Test ordering.
-        results = RichTextPage.objects.search("test")
-        self.assertEqual(len(results), 2)
-        if results:
-            self.assertEqual(results[0].id, second)
-        # Test the actual search view.
-        response = self.client.get(reverse("search") + "?q=test")
-        self.assertEqual(response.status_code, 200)
-
-    def _create_page(self, title, status):
-        return RichTextPage.objects.create(title=title, status=status)
-
-    def _test_site_pages(self, title, status, count):
-        # test _default_manager
-        pages = RichTextPage._default_manager.all()
-        self.assertEqual(pages.count(), count)
-        self.assertTrue(title in [page.title for page in pages])
-
-        # test objects manager
-        pages = RichTextPage.objects.all()
-        self.assertEqual(pages.count(), count)
-        self.assertTrue(title in [page.title for page in pages])
-
-        # test response status code
-        code = 200 if status == CONTENT_STATUS_PUBLISHED else 404
-        pages = RichTextPage.objects.filter(status=status)
-        response = self.client.get(pages[0].get_absolute_url(), follow=True)
-        self.assertEqual(response.status_code, code)
 
     @skipUnless("mezzanine.pages" in settings.INSTALLED_APPS,
                 "pages app required")
@@ -336,29 +243,6 @@ class CoreTests(TestCase):
         }, follow=True)
         self.assertEqual(response.status_code, 200)
 
-    def test_richtext_widget(self):
-        """
-        Test that the RichTextField gets its widget type correctly from
-        settings, and is able to be overridden in a form's Meta.
-        """
-
-        class RichTextModel(models.Model):
-            text_default = RichTextField()
-            text_overridden = RichTextField()
-
-        form_class = modelform_factory(
-            RichTextModel,
-            fields=('text_default', 'text_overridden'),
-            widgets={'text_overridden': Textarea})
-        form = form_class()
-
-        richtext_widget = import_dotted_path(settings.RICHTEXT_WIDGET_CLASS)
-
-        self.assertIsInstance(form.fields['text_default'].widget,
-                              richtext_widget)
-        self.assertIsInstance(form.fields['text_overridden'].widget,
-                              Textarea)
-
     def test_admin_sites_dropdown(self):
         """
         Ensures the site selection dropdown appears in the admin.
@@ -392,119 +276,3 @@ class CoreTests(TestCase):
         if VERSION >= (1, 7):
             fields = field_admin.get_fields(request)
             self.assertEqual(fields[-1], '_order')
-
-    def test_dynamic_inline_admins_fields_tuple(self):
-        """
-        Checks if moving the ``_order`` field works with immutable sequences.
-        """
-        class MyModelInline(BaseDynamicInlineAdmin, InlineModelAdmin):
-            # Any model would work since we're only instantiating the class and
-            # not actually using it.
-            model = RichTextPage
-            fields = ('a', '_order', 'b')
-
-        request = self._request_factory.get('/admin/')
-        inline = MyModelInline(None, AdminSite())
-        fields = inline.get_fieldsets(request)[0][1]['fields']
-        self.assertSequenceEqual(fields, ('a', 'b', '_order'))
-
-    def test_dynamic_inline_admins_fields_without_order(self):
-        """
-        Checks that ``_order`` field will be added if ``fields`` are listed
-        without it.
-        """
-        class MyModelInline(BaseDynamicInlineAdmin, InlineModelAdmin):
-            model = RichTextPage
-            fields = ('a', 'b')
-
-        request = self._request_factory.get('/admin/')
-        inline = MyModelInline(None, AdminSite())
-        fields = inline.get_fieldsets(request)[0][1]['fields']
-        self.assertSequenceEqual(fields, ('a', 'b', '_order'))
-
-    def test_dynamic_inline_admins_fieldsets(self):
-        """
-        Tests if ``_order`` is moved to the end of the last fieldsets fields.
-        """
-        class MyModelInline(BaseDynamicInlineAdmin, InlineModelAdmin):
-            model = RichTextPage
-            fieldsets = (("Fieldset 1", {'fields': ('a',)}),
-                         ("Fieldset 2", {'fields': ('_order', 'b')}),
-                         ("Fieldset 3", {'fields': ('c')}))
-
-        request = self._request_factory.get('/admin/')
-        inline = MyModelInline(None, AdminSite())
-        fieldsets = inline.get_fieldsets(request)
-        self.assertEqual(fieldsets[-1][1]["fields"][-1], '_order')
-        self.assertNotIn('_order', fieldsets[1][1]["fields"])
-
-
-@skipUnless("mezzanine.pages" in settings.INSTALLED_APPS,
-            "pages app required")
-class SiteRelatedTestCase(TestCase):
-
-    def test_update_site(self):
-        from django.conf import settings
-        from mezzanine.utils.sites import current_site_id
-
-        # setup
-        try:
-            old_site_id = settings.SITE_ID
-        except:
-            old_site_id = None
-
-        site1 = Site.objects.create(domain="site1.com")
-        site2 = Site.objects.create(domain="site2.com")
-
-        # default behaviour, page gets assigned current site
-        settings.SITE_ID = site2.pk
-        self.assertEqual(settings.SITE_ID, current_site_id())
-        page = RichTextPage()
-        page.save()
-        self.assertEqual(page.site_id, site2.pk)
-
-        # Subsequent saves do not update site to current site
-        page.site = site1
-        page.save()
-        self.assertEqual(page.site_id, site1.pk)
-
-        # resave w/ update_site=True, page gets assigned current site
-        settings.SITE_ID = site1.pk
-        page.site = site2
-        page.save(update_site=True)
-        self.assertEqual(page.site_id, site1.pk)
-
-        # resave w/ update_site=False, page does not update site
-        settings.SITE_ID = site2.pk
-        page.save(update_site=False)
-        self.assertEqual(page.site_id, site1.pk)
-
-        # When update_site=True, new page gets assigned current site
-        settings.SITE_ID = site2.pk
-        page = RichTextPage()
-        page.site = site1
-        page.save(update_site=True)
-        self.assertEqual(page.site_id, site2.pk)
-
-        # When update_site=False, new page keeps current site
-        settings.SITE_ID = site2.pk
-        page = RichTextPage()
-        page.site = site1
-        page.save(update_site=False)
-        self.assertEqual(page.site_id, site1.pk)
-
-        # When site explicitly assigned, new page keeps assigned site
-        settings.SITE_ID = site2.pk
-        page = RichTextPage()
-        page.site = site1
-        page.save()
-        self.assertEqual(page.site_id, site1.pk)
-
-        # tear down
-        if old_site_id:
-            settings.SITE_ID = old_site_id
-        else:
-            del settings.SITE_ID
-
-        site1.delete()
-        site2.delete()

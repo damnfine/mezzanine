@@ -21,7 +21,7 @@ from django.utils.timezone import now
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
-from mezzanine.core.fields import RichTextField, OrderField
+from mezzanine.core.fields import OrderField
 from mezzanine.core.managers import DisplayableManager, CurrentSiteManager
 from mezzanine.utils.html import TagCloser
 from mezzanine.utils.models import base_concrete_model, get_user_model_name
@@ -153,18 +153,14 @@ class MetaData(models.Model):
         field.
         """
         description = ""
-        # Use the first RichTextField, or TextField if none found.
-        for field_type in (RichTextField, models.TextField):
+        # Use the first or TextField if none found.
+        for field_type in (models.TextField,):
             if not description:
                 for field in self._meta.fields:
                     if (isinstance(field, field_type) and
                             field.name != "description"):
                         description = getattr(self, field.name)
-                        if description:
-                            from mezzanine.core.templatetags.mezzanine_tags \
-                                                    import richtext_filters
-                            description = richtext_filters(description)
-                            break
+
         # Fall back to the title if description couldn't be determined.
         if not description:
             description = str(self)
@@ -344,20 +340,6 @@ class Displayable(Slugged, MetaData, TimeStamped):
         Retrieves previous object by publish date.
         """
         return self._get_next_or_previous_by_publish_date(False, **kwargs)
-
-
-class RichText(models.Model):
-    """
-    Provides a Rich Text field for managing general content and making
-    it searchable.
-    """
-
-    content = RichTextField(_("Content"))
-
-    search_fields = ("content",)
-
-    class Meta:
-        abstract = True
 
 
 class OrderableBase(ModelBase):

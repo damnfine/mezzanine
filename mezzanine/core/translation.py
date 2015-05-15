@@ -7,7 +7,3 @@ class TranslatedSlugged(TranslationOptions):
 
 class TranslatedDisplayable(TranslatedSlugged):
     fields = ('_meta_title', 'description')
-
-
-class TranslatedRichText(TranslationOptions):
-    fields = ('content',)

@@ -34,51 +34,6 @@ class OrderField(models.IntegerField):
         return super(OrderField, self).formfield(**kwargs)
 
 
-class RichTextField(models.TextField):
-    """
-    TextField that stores HTML.
-    """
-
-    def formfield(self, **kwargs):
-        """
-        Apply the widget class defined by the
-        ``RICHTEXT_WIDGET_CLASS`` setting.
-        """
-        default = kwargs.get("widget", None) or AdminTextareaWidget
-        if default is AdminTextareaWidget:
-            from mezzanine.conf import settings
-            richtext_widget_path = settings.RICHTEXT_WIDGET_CLASS
-            try:
-                widget_class = import_dotted_path(richtext_widget_path)
-            except ImportError:
-                raise ImproperlyConfigured(_("Could not import the value of "
-                                             "settings.RICHTEXT_WIDGET_CLASS: "
-                                             "%s" % richtext_widget_path))
-            kwargs["widget"] = widget_class()
-        kwargs.setdefault("required", False)
-        formfield = super(RichTextField, self).formfield(**kwargs)
-        return formfield
-
-    def clean(self, value, model_instance):
-        """
-        Remove potentially dangerous HTML tags and attributes.
-        """
-        from mezzanine.conf import settings
-        from mezzanine.core.defaults import (RICHTEXT_FILTER_LEVEL_NONE,
-                                             RICHTEXT_FILTER_LEVEL_LOW)
-        settings.use_editable()
-        if settings.RICHTEXT_FILTER_LEVEL == RICHTEXT_FILTER_LEVEL_NONE:
-            return value
-        tags = settings.RICHTEXT_ALLOWED_TAGS
-        attrs = settings.RICHTEXT_ALLOWED_ATTRIBUTES
-        styles = settings.RICHTEXT_ALLOWED_STYLES
-        if settings.RICHTEXT_FILTER_LEVEL == RICHTEXT_FILTER_LEVEL_LOW:
-            tags += LOW_FILTER_TAGS
-            attrs += LOW_FILTER_ATTRS
-        return clean(value, tags=tags, attributes=attrs, strip=True,
-                     strip_comments=False, styles=styles)
-
-
 class MultiChoiceField(with_metaclass(models.SubfieldBase, models.CharField)):
     """
     Charfield that stores multiple choices selected as a comma
@@ -138,14 +93,12 @@ else:
             super(FileField, self).__init__(*args, **kwargs)
 
 
-HtmlField = RichTextField  # For backward compatibility in south migrations.
-
 # South requires custom fields to be given "rules".
 # See http://south.aeracode.org/docs/customfields.html
 if "south" in settings.INSTALLED_APPS:
     try:
         from south.modelsinspector import add_introspection_rules
         add_introspection_rules(patterns=["mezzanine\.core\.fields\."],
-            rules=[((FileField, RichTextField, MultiChoiceField), [], {})])
+            rules=[((FileField, MultiChoiceField), [], {})])
     except ImportError:
         pass

@@ -15,7 +15,7 @@ from django.utils.translation import get_language
 from mezzanine.conf import settings
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.core.request import current_request
-from mezzanine.pages.models import Page, RichTextPage
+from mezzanine.pages.models import Page
 from mezzanine.urls import PAGES_SLUG
 from mezzanine.utils.tests import TestCase
 
@@ -39,7 +39,7 @@ class PagesTests(TestCase):
         behave as expected.
         """
         # Create related pages.
-        primary, created = RichTextPage.objects.get_or_create(title="Primary")
+        primary, created = Page.objects.get_or_create(title="Primary")
         secondary, created = primary.children.get_or_create(title="Secondary")
         tertiary, created = secondary.children.get_or_create(title="Tertiary")
         # Force a site ID to avoid the site query when measuring queries.
@@ -83,9 +83,9 @@ class PagesTests(TestCase):
         self.assertEqual(ascendants[1].id, primary.id)
 
     def test_set_parent(self):
-        old_parent, _ = RichTextPage.objects.get_or_create(title="Old parent")
-        new_parent, _ = RichTextPage.objects.get_or_create(title="New parent")
-        child, _ = RichTextPage.objects.get_or_create(
+        old_parent, _ = Page.objects.get_or_create(title="Old parent")
+        new_parent, _ = Page.objects.get_or_create(title="New parent")
+        child, _ = Page.objects.get_or_create(
             title="Child", slug="kid")
         self.assertTrue(child.parent is None)
         self.assertTrue(child.slug == "kid")
@@ -95,7 +95,7 @@ class PagesTests(TestCase):
         self.assertEqual(child.parent_id, old_parent.id)
         self.assertTrue(child.slug == "old-parent/kid")
 
-        child = RichTextPage.objects.get(id=child.id)
+        child = Page.objects.get(id=child.id)
         self.assertEqual(child.parent_id, old_parent.id)
         self.assertTrue(child.slug == "old-parent/kid")
 
@@ -104,7 +104,7 @@ class PagesTests(TestCase):
         self.assertEqual(child.parent_id, new_parent.id)
         self.assertTrue(child.slug == "new-parent/kid")
 
-        child = RichTextPage.objects.get(id=child.id)
+        child = Page.objects.get(id=child.id)
         self.assertEqual(child.parent_id, new_parent.id)
         self.assertTrue(child.slug == "new-parent/kid")
 
@@ -113,53 +113,53 @@ class PagesTests(TestCase):
         self.assertTrue(child.parent is None)
         self.assertTrue(child.slug == "kid")
 
-        child = RichTextPage.objects.get(id=child.id)
+        child = Page.objects.get(id=child.id)
         self.assertTrue(child.parent is None)
         self.assertTrue(child.slug == "kid")
 
-        child = RichTextPage(title="child2")
+        child = Page(title="child2")
         child.set_parent(new_parent)
         self.assertEqual(child.slug, "new-parent/child2")
 
         # Assert that cycles are detected.
-        p1, _ = RichTextPage.objects.get_or_create(title="p1")
-        p2, _ = RichTextPage.objects.get_or_create(title="p2")
+        p1, _ = Page.objects.get_or_create(title="p1")
+        p2, _ = Page.objects.get_or_create(title="p2")
         p2.set_parent(p1)
         with self.assertRaises(AttributeError):
             p1.set_parent(p1)
         with self.assertRaises(AttributeError):
             p1.set_parent(p2)
-        p2c = RichTextPage.objects.get(title="p2")
+        p2c = Page.objects.get(title="p2")
         with self.assertRaises(AttributeError):
             p1.set_parent(p2c)
 
     def test_set_slug(self):
-        parent, _ = RichTextPage.objects.get_or_create(
+        parent, _ = Page.objects.get_or_create(
             title="Parent", slug="parent")
-        child, _ = RichTextPage.objects.get_or_create(
+        child, _ = Page.objects.get_or_create(
             title="Child", slug="parent/child", parent_id=parent.id)
         parent.set_slug("new-parent-slug")
         self.assertTrue(parent.slug == "new-parent-slug")
 
-        parent = RichTextPage.objects.get(id=parent.id)
+        parent = Page.objects.get(id=parent.id)
         self.assertTrue(parent.slug == "new-parent-slug")
 
-        child = RichTextPage.objects.get(id=child.id)
+        child = Page.objects.get(id=child.id)
         self.assertTrue(child.slug == "new-parent-slug/child")
 
     def test_login_required(self):
-        public, _ = RichTextPage.objects.get_or_create(
+        public, _ = Page.objects.get_or_create(
             title="Public", slug="public", login_required=False)
-        private, _ = RichTextPage.objects.get_or_create(
+        private, _ = Page.objects.get_or_create(
             title="Private", slug="private", login_required=True)
         accounts_installed = ("mezzanine.accounts" in settings.INSTALLED_APPS)
 
         args = {"for_user": AnonymousUser()}
-        self.assertTrue(public in RichTextPage.objects.published(**args))
-        self.assertTrue(private not in RichTextPage.objects.published(**args))
+        self.assertTrue(public in Page.objects.published(**args))
+        self.assertTrue(private not in Page.objects.published(**args))
         args = {"for_user": User.objects.get(username=self._username)}
-        self.assertTrue(public in RichTextPage.objects.published(**args))
-        self.assertTrue(private in RichTextPage.objects.published(**args))
+        self.assertTrue(public in Page.objects.published(**args))
+        self.assertTrue(private in Page.objects.published(**args))
 
         public_url = public.get_absolute_url()
         private_url = private.get_absolute_url()
@@ -245,7 +245,7 @@ class PagesTests(TestCase):
                     '{% page_menu "pages/menus/tree.html" %}')
         before = self.queries_used_for_template(template)
         self.assertTrue(before > 0)
-        self.create_recursive_objects(RichTextPage, "parent", title="Page",
+        self.create_recursive_objects(Page, "parent", title="Page",
                                       status=CONTENT_STATUS_PUBLISHED)
         after = self.queries_used_for_template(template)
         self.assertEqual(before, after)
@@ -260,7 +260,7 @@ class PagesTests(TestCase):
         template = "{% load pages_tags %}"
         for i, label, path in settings.PAGE_MENU_TEMPLATES:
             menus.append(i)
-            pages.append(RichTextPage.objects.create(in_menus=list(menus),
+            pages.append(Page.objects.create(in_menus=list(menus),
                 title="Page for %s" % str(label),
                 status=CONTENT_STATUS_PUBLISHED))
             template += "{%% page_menu '%s' %%}" % path
@@ -297,7 +297,7 @@ class PagesTests(TestCase):
         # on the test.
         if PAGES_SLUG:
             return
-        page, created = RichTextPage.objects.get_or_create(slug="edit")
+        page, created = Page.objects.get_or_create(slug="edit")
         self.assertTrue(page.overridden())
 
     def test_unicode_slug_parm_to_processor_for(self):
@@ -311,7 +311,7 @@ class PagesTests(TestCase):
         def test_page_processor(request, page):
             return {}
 
-        page, _ = RichTextPage.objects.get_or_create(title="test page")
+        page, _ = Page.objects.get_or_create(title="test page")
         self.assertEqual(test_page_processor(current_request(), page), {})
 
     @skipUnless(settings.USE_MODELTRANSLATION and len(settings.LANGUAGES) > 1,
@@ -330,7 +330,7 @@ class PagesTests(TestCase):
         del code_list[default_language]
         title_1 = "Title firt language"
         title_2 = "Title second language"
-        page, _ = RichTextPage.objects.get_or_create(title=title_1)
+        page, _ = Page.objects.get_or_create(title=title_1)
         for code in code_list:
             try:
                 activate(code)

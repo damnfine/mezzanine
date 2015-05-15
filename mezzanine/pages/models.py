@@ -11,7 +11,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _, ugettext
 
 from mezzanine.conf import settings
-from mezzanine.core.models import Displayable, Orderable, RichText
+from mezzanine.core.models import Displayable, Orderable
 from mezzanine.pages.fields import MenusField
 from mezzanine.pages.managers import PageManager
 from mezzanine.utils.urls import path_to_slug
@@ -281,17 +281,6 @@ class Page(BasePage):
         in ``mezzanine.pages.views.page``.
         """
         return None
-
-
-class RichTextPage(Page, RichText):
-    """
-    Implements the default type of page with a single Rich Text
-    content field.
-    """
-
-    class Meta:
-        verbose_name = _("Rich text page")
-        verbose_name_plural = _("Rich text pages")
 
 
 class PageMoveException(Exception):

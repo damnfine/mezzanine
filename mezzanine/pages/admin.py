@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 
 from mezzanine.conf import settings
 from mezzanine.core.admin import DisplayableAdmin, DisplayableAdminForm
-from mezzanine.pages.models import Page, RichTextPage
+from mezzanine.pages.models import Page
 from mezzanine.utils.urls import admin_url
 
 
@@ -216,4 +216,3 @@ class PageAdmin(DisplayableAdmin):
 
 
 admin.site.register(Page, PageAdmin)
-admin.site.register(RichTextPage, PageAdmin)

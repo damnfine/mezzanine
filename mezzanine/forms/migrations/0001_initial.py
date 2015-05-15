@@ -50,9 +50,9 @@ class Migration(migrations.Migration):
             name='Form',
             fields=[
                 ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),
-                ('content', mezzanine.core.fields.RichTextField(verbose_name='Content')),
+                ('content', mezzanine.core.fields.TextField(verbose_name='Content')),
                 ('button_text', models.CharField(default='Submit', max_length=50, verbose_name='Button text')),
-                ('response', mezzanine.core.fields.RichTextField(verbose_name='Response')),
+                ('response', mezzanine.core.fields.TextField(verbose_name='Response')),
                 ('send_email', models.BooleanField(default=True, help_text='To send an email to the email address supplied in the form upon submission, check this box.', verbose_name='Send email to user')),
                 ('email_from', models.EmailField(help_text='The address the email will be sent from', max_length=75, verbose_name='From address', blank=True)),
                 ('email_copies', models.CharField(help_text='Provide a comma separated list of email addresses to be notified upon form submission. Leave blank to disable notifications.', max_length=200, verbose_name='Send email to others', blank=True)),

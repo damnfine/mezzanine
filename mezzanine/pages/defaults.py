@@ -23,7 +23,7 @@ register_setting(
         "in the select drop-down for adding new pages within the admin "
         "page tree interface."),
     editable=False,
-    default=("pages.RichTextPage",),
+    default=("pages.Page",),
 )
 
 register_setting(

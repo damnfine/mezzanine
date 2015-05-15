@@ -5,20 +5,19 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from mezzanine.conf import settings
-from mezzanine.core.fields import RichTextField
-from mezzanine.core.models import Orderable, RichText
+from mezzanine.core.models import Orderable
 from mezzanine.forms import fields
 from mezzanine.pages.models import Page
 
 
-class Form(Page, RichText):
+class Form(Page):
     """
     A user-built form.
     """
 
     button_text = models.CharField(_("Button text"), max_length=50,
         default=ugettext("Submit"))
-    response = RichTextField(_("Response"))
+    response = TextField(_("Response"))
     send_email = models.BooleanField(_("Send email to user"), default=True,
         help_text=_("To send an email to the email address supplied in "
                     "the form upon submission, check this box."))

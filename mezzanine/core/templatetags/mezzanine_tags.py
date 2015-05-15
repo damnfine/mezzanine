@@ -34,7 +34,6 @@ from django.utils.html import strip_tags
 from django.utils.text import capfirst
 
 from mezzanine.conf import settings
-from mezzanine.core.fields import RichTextField
 from mezzanine.core.forms import get_edit_form
 from mezzanine.utils.cache import nevercache_token, cache_installed
 from mezzanine.utils.html import decode_entities
@@ -422,41 +421,7 @@ def editable_loader(context):
         except KeyError:
             context["editable_obj"] = context.get("page", None)
         context["toolbar"] = t.render(Context(context))
-        context["richtext_media"] = RichTextField().formfield().widget.media
     return context
-
-
-@register.filter
-def richtext_filters(content):
-    """
-    Takes a value edited via the WYSIWYG editor, and passes it through
-    each of the functions specified by the RICHTEXT_FILTERS setting.
-    """
-    filter_names = settings.RICHTEXT_FILTERS
-    if not filter_names:
-        try:
-            filter_names = [settings.RICHTEXT_FILTER]
-        except AttributeError:
-            pass
-        else:
-            from warnings import warn
-            warn("The `RICHTEXT_FILTER` setting is deprecated in favor of "
-                 "the new plural setting `RICHTEXT_FILTERS`.")
-    for filter_name in filter_names:
-        filter_func = import_dotted_path(filter_name)
-        content = filter_func(content)
-    return content
-
-
-@register.filter
-def richtext_filter(content):
-    """
-    Deprecated version of richtext_filters above.
-    """
-    from warnings import warn
-    warn("The `richtext_filter` template tag is deprecated in favor of "
-         "the new plural tag `richtext_filters`.")
-    return richtext_filters(content)
 
 
 @register.to_end_tag

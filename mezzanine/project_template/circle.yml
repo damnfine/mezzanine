@@ -1,0 +1,27 @@
+machine:
+  timezone:
+    Europe/London
+  hosts:
+    test.example.com: 127.0.0.1
+    alpha.example.com: 127.0.0.1
+    beta.example.com: 127.0.0.1
+    example.com: 127.0.0.1
+test:
+  pre:
+    - createdb example_test
+    - ln -s $PWD/deploy/local_settings/test.py local_settings.py
+  post:
+    - python manage.py test
+deployment:
+  feature:
+    branch: /feature.*/
+    commands:
+      - bundle exec cap alpha deploy --trace
+  release:
+    branch: /release.*/
+    commands:
+      - bundle exec cap beta deploy
+  master:
+    branch: master
+    commands:
+      - bundle exec cap production deploy

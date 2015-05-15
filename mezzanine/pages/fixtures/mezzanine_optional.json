@@ -9,7 +9,7 @@
             "description": "About us",
             "title": "About",
             "titles": "About",
-            "content_model": "richtextpage",
+            "content_model": "page",
             "in_menus": [1, 2, 3],
             "slug": "about",
             "site": 1
@@ -42,7 +42,7 @@
             "description": "Team",
             "title": "Team",
             "titles": "About / Team",
-            "content_model": "richtextpage",
+            "content_model": "page",
             "in_menus": [1, 2, 3],
             "slug": "about/team",
             "site": 1
@@ -58,7 +58,7 @@
             "description": "History",
             "title": "History",
             "titles": "About / History",
-            "content_model": "richtextpage",
+            "content_model": "page",
             "in_menus": [1, 2, 3],
             "slug": "about/history",
             "site": 1
@@ -74,7 +74,7 @@
             "description": "Legals",
             "title": "Legals",
             "titles": "Contact / Legals",
-            "content_model": "richtextpage",
+            "content_model": "page",
             "in_menus": [1, 2, 3],
             "slug": "contact/legals",
             "site": 1
@@ -98,28 +98,28 @@
     },
     {
         "pk": 2,
-        "model": "pages.richtextpage",
+        "model": "pages.page",
         "fields": {
             "content": "<p>About us</p>"
         }
     },
     {
         "pk": 4,
-        "model": "pages.richtextpage",
+        "model": "pages.page",
         "fields": {
             "content": "<p>Team</p>"
         }
     },
     {
         "pk": 5,
-        "model": "pages.richtextpage",
+        "model": "pages.page",
         "fields": {
             "content": "<p>History</p>"
         }
     },
     {
         "pk": 6,
-        "model": "pages.richtextpage",
+        "model": "pages.page",
         "fields": {
             "content": "<p>Legals</p>"
        }

@@ -42,19 +42,6 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.CreateModel(
-            name='RichTextPage',
-            fields=[
-                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='pages.Page')),
-                ('content', mezzanine.core.fields.RichTextField(verbose_name='Content')),
-            ],
-            options={
-                'ordering': ('_order',),
-                'verbose_name': 'Rich text page',
-                'verbose_name_plural': 'Rich text pages',
-            },
-            bases=('pages.page', models.Model),
-        ),
         migrations.AddField(
             model_name='page',
             name='parent',
