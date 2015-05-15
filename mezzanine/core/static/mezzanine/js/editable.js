@@ -26,9 +26,6 @@ jQuery(function($) {
         });
         form.hide();
         loading.show();
-        if (typeof tinyMCE != "undefined" ) {
-            tinyMCE.triggerSave();
-        }
         form.ajaxSubmit({success: function(data) {
             if (data && data != '<head></head><body></body>') {
                 showError(data);

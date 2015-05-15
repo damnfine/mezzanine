@@ -9,7 +9,7 @@ try:
 except ImportError:
     from urllib import urlopen, urlencode
 
-from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.db.models.base import ModelBase
 from django.db.models.signals import post_save
@@ -479,10 +479,8 @@ class SitePermission(models.Model):
     access.
     """
 
-    user = models.ForeignKey(user_model_name, verbose_name=_("Author"),
-        related_name="%(class)ss", unique=True)
-    sites = models.ManyToManyField("sites.Site", blank=True,
-                                   verbose_name=_("Sites"))
+    user = models.OneToOneField(user_model_name, verbose_name=_("Author"),  related_name="%(class)ss")
+    sites = models.ManyToManyField("sites.Site", blank=True, verbose_name=_("Sites"))
 
     class Meta:
         verbose_name = _("Site permission")

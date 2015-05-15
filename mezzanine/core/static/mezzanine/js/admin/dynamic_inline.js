@@ -48,9 +48,6 @@ jQuery(function($) {
 
     // Set the value of the _order fields on submit.
     $('.dynamic-inline').closest("form").submit(function() {
-        if (typeof tinyMCE != 'undefined') {
-            tinyMCE.triggerSave();
-        }
         $.each($(parentSelector), function(i, parent) {
             var order = 0;
             $.each($(parent).find(orderSelector), function(i, field) {
