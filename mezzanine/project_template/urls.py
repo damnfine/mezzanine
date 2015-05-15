@@ -4,11 +4,11 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 
-from mezzanine.core.views import direct_to_template
-from mezzanine.conf import settings
-
+import backbone
 
 admin.autodiscover()
+
+backbone.autodiscover()
 
 # Add the urlpatterns for any custom Django applications here.
 # You can also change the ``home`` view to add your own functionality
@@ -20,12 +20,8 @@ urlpatterns = i18n_patterns("",
     ("^admin/", include(admin.site.urls)),
 )
 
-if settings.USE_MODELTRANSLATION:
-    urlpatterns += patterns('',
-        url('^i18n/$', 'django.views.i18n.set_language', name='set_language'),
-    )
-
 urlpatterns += patterns('',
+
     # We don't want to presume how your homepage works, so here are a
     # few patterns you can use to set it up.
 
@@ -36,7 +32,7 @@ urlpatterns += patterns('',
     # one homepage pattern, so if you use a different one, comment this
     # one out.
 
-    url("^$", direct_to_template, {"template": "index.html"}, name="home"),
+    #url("^$", direct_to_template, {"template": "index.html"}, name="home"),
 
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE
     # ---------------------------------------------
@@ -51,7 +47,19 @@ urlpatterns += patterns('',
     # "/.html" - so for this case, the template "pages/index.html"
     # should be used if you want to customize the homepage's template.
 
-    # url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
+    url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
+    
+    (r'^api/', include(backbone.site.urls)),
+
+    # HOMEPAGE FOR A BLOG-ONLY SITE
+    # -----------------------------
+    # This pattern points the homepage to the blog post listing page,
+    # and is useful for sites that are primarily blogs. If you use this
+    # pattern, you'll also need to set BLOG_SLUG = "" in your
+    # ``settings.py`` module, and delete the blog page object from the
+    # page tree in the admin if it was installed.
+
+    # url("^$", "mezzanine.blog.views.blog_post_list", name="home"),
 
     # MEZZANINE'S URLS
     # ----------------

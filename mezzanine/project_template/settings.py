@@ -1,8 +1,9 @@
 from __future__ import absolute_import, unicode_literals
 import os
 
-_ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 
+WSGI_APPLICATION = 'wsgi.application'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ######################
 # MEZZANINE SETTINGS #
@@ -10,24 +11,27 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 
 # The following settings are already defined with default values in
 # the ``defaults.py`` module within each of Mezzanine's apps, but are
-# common enough to be put here, commented out, for conveniently
+# common enough to be put here, commented out, for convenient
 # overriding. Please consult the settings documentation for a full list
 # of settings Mezzanine implements:
 # http://mezzanine.jupo.org/docs/configuration.html#default-settings
 
 # Controls the ordering and grouping of the admin menu.
-#
-# ADMIN_MENU_ORDER = (
-#     ("Content", ("pages.Page", (_("Media Library"), "fb_browse"),)),
-#     ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
-#     ("Users", ("auth.User", "auth.Group",)),
-# )
+ADMIN_MENU_ORDER = (
+    #("Media", (("Media Library", "fb_browse",),),),
+    ("Site", ("sites.Site",
+              "redirects.Redirect",
+              "conf.Setting",),),
+    ("Users", ("auth.User",
+               "auth.Group",),),
+)
 
 # A three item sequence, each containing a sequence of template tags
 # used to render the admin dashboard.
 #
 # DASHBOARD_TAGS = (
-#     (mezzanine_tags.app_list"),
+#     ("blog_tags.quick_blog", "mezzanine_tags.app_list"),
+#     ("comment_tags.recent_comments",),
 #     ("mezzanine_tags.recent_actions",),
 # )
 
@@ -39,9 +43,9 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 # that doesn't appear in this setting, all pages will appear in it.
 
 # PAGE_MENU_TEMPLATES = (
-#     (1, _("Top navigation bar"), "pages/menus/dropdown.html"),
-#     (2, _("Left-hand tree"), "pages/menus/tree.html"),
-#     (3, _("Footer"), "pages/menus/footer.html"),
+#     (1, "Top navigation bar", "pages/menus/dropdown.html"),
+#     (2, "Left-hand tree", "pages/menus/tree.html"),
+#     (3, "Footer", "pages/menus/footer.html"),
 # )
 
 # A sequence of fields that will be injected into Mezzanine's (or any
@@ -60,7 +64,7 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 #         # Dotted path to field class.
 #         "somelib.fields.ImageField",
 #         # Positional args for field class.
-#         (_("Image"),),
+#         ("Image",),
 #         # Keyword args for field class.
 #         {"blank": True, "upload_to": "blog"},
 #     ),
@@ -68,18 +72,18 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 #     (
 #         "mezzanine.pages.models.Page.another_field",
 #         "IntegerField", # 'django.db.models.' is implied if path is omitted.
-#         (_("Another name"),),
+#         ("Another name",),
 #         {"blank": True, "default": 1},
 #     ),
 # )
 
+# Setting to turn on featured images for blog posts. Defaults to False.
+#
+# BLOG_USE_FEATURED_IMAGE = True
+
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
 USE_SOUTH = True
-
-# If True, the django-modeltranslation will be added to the
-# INSTALLED_APPS setting.
-USE_MODELTRANSLATION = False
 
 
 ########################
@@ -89,9 +93,7 @@ USE_MODELTRANSLATION = False
 # People who get code error notifications.
 # In the format (('Full Name', 'email@example.com'),
 #                ('Full Name', 'anotheremail@example.com'))
-ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
-)
+ADMINS = ()
 MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -115,6 +117,7 @@ USE_TZ = True
 LANGUAGE_CODE = "en"
 
 # Supported languages
+_ = lambda s: s
 LANGUAGES = (
     ('en', _('English')),
 )
@@ -129,7 +132,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SITE_ID = 1
 
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
@@ -152,7 +154,9 @@ AUTHENTICATION_BACKENDS = ("mezzanine.core.auth_backends.MezzanineBackend",)
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    # "django.contrib.staticfiles.finders.DefaultStorageFinder",
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
 )
 
 # The numeric mode to set newly-uploaded files to. The value should be
@@ -167,7 +171,7 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 DATABASES = {
     "default": {
         # Add "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
-        "ENGINE": "django.db.backends.",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
         # DB name or path to database file if using sqlite3.
         "NAME": "",
         # Not used with sqlite3.
@@ -185,6 +189,8 @@ DATABASES = {
 #########
 # PATHS #
 #########
+
+import os
 
 # Full filesystem path to the project.
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -217,13 +223,13 @@ MEDIA_URL = STATIC_URL + "media/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
 
 # Package/module name to import the root urlpatterns from for the project.
-ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
+ROOT_URLCONF = "urls"
 
 # Put strings here, like "/home/html/django_templates"
 # or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),),)
 
 
 ################
@@ -231,6 +237,10 @@ TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 ################
 
 INSTALLED_APPS = (
+    #"embed_video",
+    "solo",
+    "backbone",
+    "compressor",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -243,7 +253,6 @@ INSTALLED_APPS = (
     "mezzanine.conf",
     "mezzanine.core",
     "mezzanine.pages",
-    "mezzanine.forms",
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -302,6 +311,30 @@ OPTIONAL_APPS = (
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
+
+###################
+# DEPLOY SETTINGS #
+###################
+
+# These settings are used by the default fabfile.py provided.
+# Check fabfile.py for defaults.
+
+# FABRIC = {
+#     "SSH_USER": "", # SSH username for host deploying to
+#     "HOSTS": ALLOWED_HOSTS[:1], # List of hosts to deploy to (eg, first host)
+#     "DOMAINS": ALLOWED_HOSTS, # Domains for public site
+#     "REPO_URL": "ssh://hg@bitbucket.org/user/project", # Project's repo URL
+#     "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
+#     "PROJECT_NAME": "", # Unique identifier for project
+#     "REQUIREMENTS_PATH": "requirements.txt", # Project's pip requirements
+#     "GUNICORN_PORT": 8000, # Port gunicorn will listen on
+#     "LOCALE": "en_US.UTF-8", # Should end with ".UTF-8"
+#     "DB_PASS": "", # Live database password
+#     "ADMIN_PASS": "", # Live admin user password
+#     "SECRET_KEY": SECRET_KEY,
+#     "NEVERCACHE_KEY": NEVERCACHE_KEY,
+# }
+
 
 ##################
 # LOCAL SETTINGS #
