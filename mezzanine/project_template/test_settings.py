@@ -1,6 +1,4 @@
-
-
-from project_template import settings
+import settings
 
 globals().update(i for i in settings.__dict__.items() if i[0].isupper())
 

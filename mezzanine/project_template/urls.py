@@ -6,12 +6,11 @@ from django.contrib import admin
 
 from mezzanine.conf import settings
 
-# TODO for api support uncomment backbone import
-# import backbone
+import backbone
 
 admin.autodiscover()
 
-# backbone.autodiscover()
+backbone.autodiscover()
 
 # Add the urlpatterns for any custom Django applications here.
 # You can also change the ``home`` view to add your own functionality
@@ -56,7 +55,7 @@ urlpatterns += patterns('',
 
     url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
 
-    # (r'^api/', include(backbone.site.urls)),
+    (r'^api/', include(backbone.site.urls)),
 
     # MEZZANINE'S URLS
     # ----------------

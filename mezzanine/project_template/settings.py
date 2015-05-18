@@ -232,9 +232,9 @@ TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
 INSTALLED_APPS = (
     # "website",
-    # "solo",
-    # "backbone",
-    # "compressor",
+    "solo",
+    "backbone",
+    "compressor",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
