@@ -55,23 +55,22 @@ def create_project():
     # Build the project up copying over the project_template from
     # each of the packages. An alternate package will overwrite
     # files from Mezzanine.
-    local_settings_deploy_path = os.path.join(project_path,
-                                              "deploy/local_settings/")
-    local_settings_file = os.path.join(project_path, "local_settings.py")
-    local_settings_deploy_file = local_settings_deploy_path + "local.py"
+    local_settings_deploy_path = os.path.join(project_path, "deploy/local_settings/")
+
+    for stage in ['local', 'test', 'alpha', 'beta', 'production']:
+        # Generate a unique SECRET_KEY for the project's settings module.
+        with open(local_settings_deploy_path+stage+".py", "r") as f:
+            data = f.read()
+        with open(local_settings_deploy_path+stage+".py", "w") as f:
+            make_key = lambda: "%s%s%s" % (uuid4(), uuid4(), uuid4())
+            data = data.replace("%(SECRET_KEY)s", make_key())
+            data = data.replace("%(NEVERCACHE_KEY)s", make_key())
+            f.write(data)
+
+    # copy project template files into project
     for package_name in packages:
         package_path = path_for_import(package_name)
         copy_tree(os.path.join(package_path, "project_template"), project_path)
-        move(local_settings_deploy_file, local_settings_file)
-
-    # Generate a unique SECRET_KEY for the project's settings module.
-    with open(local_settings_file, "r") as f:
-        data = f.read()
-    with open(local_settings_file, "w") as f:
-        make_key = lambda: "%s%s%s" % (uuid4(), uuid4(), uuid4())
-        data = data.replace("%(SECRET_KEY)s", make_key())
-        data = data.replace("%(NEVERCACHE_KEY)s", make_key())
-        f.write(data)
 
     # Clean up pyc files.
     for (root, dirs, files) in os.walk(project_path, False):
