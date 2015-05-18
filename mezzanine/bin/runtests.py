@@ -58,7 +58,7 @@ PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher',)
                     pass
         atexit.register(cleanup_test_settings)
 
-    if django.VERSION >= (1, 7):
+    if django.VERSION >= (1, 8, 1):
         django.setup()
 
     try:
