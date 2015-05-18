@@ -5,7 +5,7 @@ from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 from mezzanine.forms import fields
 from mezzanine.forms.models import Form
 from mezzanine.utils.tests import TestCase
-from django.utils.unittest import skipUnless
+from django.test.utils import skipUnless
 
 
 class TestsForm(TestCase):

@@ -4,11 +4,13 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 
-from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
 
+import backbone
 
 admin.autodiscover()
+
+backbone.autodiscover()
 
 # Add the urlpatterns for any custom Django applications here.
 # You can also change the ``home`` view to add your own functionality
@@ -36,7 +38,7 @@ urlpatterns += patterns('',
     # one homepage pattern, so if you use a different one, comment this
     # one out.
 
-    url("^$", direct_to_template, {"template": "index.html"}, name="home"),
+    # url("^$", direct_to_template, {"template": "index.html"}, name="home"),
 
     # HOMEPAGE AS AN EDITABLE PAGE IN THE PAGE TREE
     # ---------------------------------------------
@@ -51,7 +53,9 @@ urlpatterns += patterns('',
     # "/.html" - so for this case, the template "pages/index.html"
     # should be used if you want to customize the homepage's template.
 
-    # url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
+    url("^$", "mezzanine.pages.views.page", {"slug": "/"}, name="home"),
+
+    (r'^api/', include(backbone.site.urls)),
 
     # MEZZANINE'S URLS
     # ----------------
