@@ -5,7 +5,6 @@ from future.builtins import open
 from distutils.dir_util import copy_tree
 from optparse import OptionParser
 import os
-from shutil import move
 from uuid import uuid4
 
 from mezzanine.utils.importing import path_for_import
@@ -55,13 +54,15 @@ def create_project():
     # Build the project up copying over the project_template from
     # each of the packages. An alternate package will overwrite
     # files from Mezzanine.
-    local_settings_deploy_path = os.path.join(project_path, "deploy/local_settings/")
+    local_settings_deploy_path = os.path.join(project_path,
+                                              "deploy/local_settings/")
 
     for stage in ['local', 'test', 'alpha', 'beta', 'production']:
         # Generate a unique SECRET_KEY for the project's settings module.
-        with open(local_settings_deploy_path+stage+".py", "r") as f:
+        stage_file = "%s%s.py" % (local_settings_deploy_path, stage,)
+        with open(stage_file, "r") as f:
             data = f.read()
-        with open(local_settings_deploy_path+stage+".py", "w") as f:
+        with open(stage_file, "w") as f:
             make_key = lambda: "%s%s%s" % (uuid4(), uuid4(), uuid4())
             data = data.replace("%(SECRET_KEY)s", make_key())
             data = data.replace("%(NEVERCACHE_KEY)s", make_key())
