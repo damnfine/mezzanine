@@ -55,7 +55,8 @@ def create_project():
     # Build the project up copying over the project_template from
     # each of the packages. An alternate package will overwrite
     # files from Mezzanine.
-    local_settings_deploy_path = os.path.join(project_path, "deploy/local_settings/")
+    local_settings_deploy_path = os.path.join(project_path,
+                                              "deploy/local_settings/")
     local_settings_file = os.path.join(project_path, "local_settings.py")
     local_settings_deploy_file = local_settings_deploy_path + "local.py"
     for package_name in packages:
