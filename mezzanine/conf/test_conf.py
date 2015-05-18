@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from future.builtins import bytes, str
 
 from django.conf import settings as django_settings
-from django.utils.unittest import skipUnless
+from django.test.utils import skipUnless
 
 from mezzanine.conf import settings, registry, register_setting
 from mezzanine.conf.models import Setting

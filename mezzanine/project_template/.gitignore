@@ -1,7 +1,15 @@
+.DS_Store
+.idea/*
+.bundle
+vendor
+venv
+supervisord.conf
 *.pyc
 *.pyo
 *.db
-.DS_Store
 .coverage
 local_settings.py
 /static
+gunicorn.conf.py
+node_modules
+media

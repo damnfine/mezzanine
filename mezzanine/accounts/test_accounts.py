@@ -55,16 +55,14 @@ class AccountsTests(TestCase):
         # Verification not required - test an active user is created.
         data = self.account_data("test1")
         settings.ACCOUNTS_VERIFICATION_REQUIRED = False
-        response = self.client.post(reverse("signup"), data, follow=True)
-        self.assertEqual(response.status_code, 200)
+        self.client.post(reverse("signup"), data, follow=True)
         users = User.objects.filter(email=data["email"], is_active=True)
         self.assertEqual(len(users), 1)
         # Verification required - test an inactive user is created,
         settings.ACCOUNTS_VERIFICATION_REQUIRED = True
         data = self.account_data("test2")
         emails = len(mail.outbox)
-        response = self.client.post(reverse("signup"), data, follow=True)
-        self.assertEqual(response.status_code, 200)
+        self.client.post(reverse("signup"), data, follow=True)
         users = User.objects.filter(email=data["email"], is_active=False)
         self.assertEqual(len(users), 1)
         # Test the verification email.
@@ -77,7 +75,6 @@ class AccountsTests(TestCase):
             "uidb36": int_to_base36(new_user.id),
             "token": default_token_generator.make_token(new_user),
         })
-        response = self.client.get(verification_url, follow=True)
-        self.assertEqual(response.status_code, 200)
+        self.client.get(verification_url, follow=True)
         users = User.objects.filter(email=data["email"], is_active=True)
         self.assertEqual(len(users), 1)
