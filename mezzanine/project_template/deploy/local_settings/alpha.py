@@ -2,10 +2,8 @@ from __future__ import unicode_literals
 
 DEBUG = True
 
-SECRET_KEY = "97ab9fc8-4e77-4034-bf49-67a205a78b2da07becf2-8f4c-4ab3-" \
-             "b169-1b7d6f3aeae8b8162e23-eaca-4894-9399-30f3067a1f44"
-NEVERCACHE_KEY = "0e2d6fc0-4057-4a7c-be34-2992c4523a2f2d4fb161-ceb5-433d-" \
-                 "bbf2-7f84698ea810128d828b-c45b-47bc-8ac2-9b479fa64657"
+SECRET_KEY = "%(SECRET_KEY)s"
+NEVERCACHE_KEY = "%(NEVERCACHE_KEY)s"
 
 ALLOWED_HOSTS = ["alpha.example.com"]
 
