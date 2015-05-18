@@ -17,7 +17,7 @@ class Form(Page):
 
     button_text = models.CharField(_("Button text"), max_length=50,
         default=ugettext("Submit"))
-    response = TextField(_("Response"))
+    response = models.TextField(_("Response"))
     send_email = models.BooleanField(_("Send email to user"), default=True,
         help_text=_("To send an email to the email address supplied in "
                     "the form upon submission, check this box."))

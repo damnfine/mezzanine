@@ -5,11 +5,11 @@ from django import VERSION
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.db import connection
-from django.utils.unittest import skipUnless
+from django.test.utils import skipUnless
 from django.template import Context, Template
 from django.test.utils import override_settings
 from django.utils.http import urlquote_plus
-from django.utils.six.moves.urllib.parse import urlparse
+from urlparse import urlparse
 from django.utils.translation import get_language
 
 from mezzanine.conf import settings

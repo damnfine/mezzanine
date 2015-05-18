@@ -17,8 +17,6 @@ from mezzanine.utils.urls import admin_url
 # Add extra fields for pages to the Displayable fields.
 # We only add the menu field if PAGE_MENU_TEMPLATES has values.
 page_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
-if settings.PAGE_MENU_TEMPLATES:
-    page_fieldsets[0][1]["fields"] += ("in_menus",)
 page_fieldsets[0][1]["fields"] += ("login_required",)
 
 

@@ -506,7 +506,7 @@ def admin_app_list(request):
     # Add all registered models, using group and title from menu order.
     for (model, model_admin) in admin.site._registry.items():
         opts = model._meta
-        in_menu = not hasattr(model_admin, "in_menu") or model_admin.in_menu()
+        
         if in_menu and request.user.has_module_perms(opts.app_label):
             perms = model_admin.get_model_perms(request)
             admin_url_name = ""

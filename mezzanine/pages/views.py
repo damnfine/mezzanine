@@ -80,7 +80,10 @@ def page(request, slug, template=u"pages/page.html", extra_context=None):
     # used, since the slug "/" won't match a template name.
     template_name = str(slug) if slug != home_slug() else "index"
     templates = [u"pages/%s.html" % template_name]
-    method_template = request.page.get_content_model().get_template_name()
+    _page = request.page
+    _c_model = _page.get_content_model()
+    _t_name = _c_model.get_template_name()
+    method_template = _t_name
     if method_template:
         templates.insert(0, method_template)
     if request.page.content_model is not None:

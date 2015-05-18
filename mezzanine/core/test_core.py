@@ -11,28 +11,21 @@ except ImportError:
 
 from django import VERSION
 from django.contrib.admin import AdminSite
-from django.contrib.admin.options import InlineModelAdmin
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django.db import models
-from django.forms import Textarea
-from django.forms.models import modelform_factory
 from django.templatetags.static import static
 from django.test.utils import override_settings
-from django.utils.html import strip_tags
-from django.utils.unittest import skipUnless
+from django.test.utils import skipUnless
 
 from mezzanine.conf import settings
-from mezzanine.core.admin import BaseDynamicInlineAdmin
 from mezzanine.core.managers import DisplayableManager
 from mezzanine.core.models import (CONTENT_STATUS_DRAFT,
                                    CONTENT_STATUS_PUBLISHED)
 from mezzanine.forms.admin import FieldAdmin
 from mezzanine.forms.models import Form
 from mezzanine.utils.importing import import_dotted_path
-from mezzanine.utils.tests import (TestCase, run_pyflakes_for_package,
-                                    run_pep8_for_package)
+from mezzanine.utils.tests import (TestCase, run_pyflakes_for_package, run_pep8_for_package)
 from mezzanine.utils.html import TagCloser
 
 

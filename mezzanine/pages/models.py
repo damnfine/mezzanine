@@ -39,7 +39,6 @@ class Page(BasePage):
 
     parent = models.ForeignKey("Page", blank=True, null=True,
         related_name="children")
-    in_menus = MenusField(_("Show in menus"), blank=True, null=True)
     titles = models.CharField(editable=False, max_length=1000, null=True)
     content_model = models.CharField(editable=False, max_length=50, null=True)
     login_required = models.BooleanField(_("Login required"), default=False,
@@ -61,10 +60,6 @@ class Page(BasePage):
         the special case of the homepage being a page object.
         """
         slug = self.slug
-        if self.content_model == "link":
-            # Ensure the URL is absolute.
-            slug = urljoin('/', slug)
-            return slug
         if slug == "/":
             return reverse("home")
         else:
@@ -267,13 +262,6 @@ class Page(BasePage):
         self.html_id = self.slug.replace("/", "-")
         # Default branch level - gets assigned in the page_menu tag.
         self.branch_level = 0
-
-    def in_menu_template(self, template_name):
-        if self.in_menus is not None:
-            for i, l, t in settings.PAGE_MENU_TEMPLATES:
-                if not str(i) in self.in_menus and t == template_name:
-                    return False
-        return True
 
     def get_template_name(self):
         """

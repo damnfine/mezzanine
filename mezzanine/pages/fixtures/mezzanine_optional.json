@@ -10,7 +10,6 @@
             "title": "About",
             "titles": "About",
             "content_model": "page",
-            "in_menus": [1, 2, 3],
             "slug": "about",
             "site": 1
         }
@@ -27,7 +26,6 @@
             "title": "Contact",
             "titles": "Contact",
             "content_model": "form",
-            "in_menus": [1, 2, 3],
             "slug": "contact",
             "site": 1
         }
@@ -43,7 +41,6 @@
             "title": "Team",
             "titles": "About / Team",
             "content_model": "page",
-            "in_menus": [1, 2, 3],
             "slug": "about/team",
             "site": 1
         }
@@ -59,7 +56,6 @@
             "title": "History",
             "titles": "About / History",
             "content_model": "page",
-            "in_menus": [1, 2, 3],
             "slug": "about/history",
             "site": 1
         }
@@ -75,7 +71,6 @@
             "title": "Legals",
             "titles": "Contact / Legals",
             "content_model": "page",
-            "in_menus": [1, 2, 3],
             "slug": "contact/legals",
             "site": 1
         }
@@ -91,7 +86,6 @@
             "title": "Gallery",
             "titles": "Gallery",
             "content_model": "gallery",
-            "in_menus": [1, 2, 3],
             "slug": "gallery",
             "site": 1
         }
