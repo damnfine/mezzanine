@@ -21,7 +21,8 @@ def main(package="mezzanine"):
     package_path = path_for_import(package)
     project_path = os.path.join(package_path, "project_template")
 
-    local_settings_path = os.path.join(project_path, "local_settings.py")
+    local_settings_path = os.path.join(project_path,
+                                       "deploy/local_settings/local.py")
     test_settings_path = os.path.join(project_path, "test_settings.py")
 
     sys.path.insert(0, package_path)

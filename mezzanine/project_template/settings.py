@@ -1,8 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 import os
 
-_ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
+_ = lambda s: s
 
+WSGI_APPLICATION = 'wsgi.application'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ######################
 # MEZZANINE SETTINGS #
@@ -76,10 +78,6 @@ _ = lambda s: s  # Dummy ugettext function, see Django 1.4 docs for info.
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
 USE_SOUTH = True
-
-# If True, the django-modeltranslation will be added to the
-# INSTALLED_APPS setting.
-USE_MODELTRANSLATION = False
 
 
 ########################
@@ -217,13 +215,15 @@ MEDIA_URL = STATIC_URL + "media/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
 
 # Package/module name to import the root urlpatterns from for the project.
-ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
+ROOT_URLCONF = "urls"
 
 # Put strings here, like "/home/html/django_templates"
 # or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
+# TODO for website app add
+# (os.path.join(PROJECT_ROOT, "website/templates"))
 
 
 ################
@@ -231,6 +231,10 @@ TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 ################
 
 INSTALLED_APPS = (
+    # "website",
+    # "solo",
+    # "backbone",
+    # "compressor",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
