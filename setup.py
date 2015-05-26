@@ -1,4 +1,3 @@
-
 import os
 import sys
 from setuptools import setup, find_packages
@@ -73,6 +72,7 @@ try:
             "requests==2.7.0",
             "requests-oauthlib==0.5.0",
             "six==1.9.0",
+            "solid-i18n==1.1.0",
             "supervisor==3.1.3",
             "tzlocal==1.1.3"
         ],
